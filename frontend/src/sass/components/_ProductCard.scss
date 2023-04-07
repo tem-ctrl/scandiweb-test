@@ -60,7 +60,7 @@
 }
 
 .delete-checkbox {
-  display: none;
+  display: inline;
   &:checked + .slider {
     background-color: #1b1a1a;
     &:before {
