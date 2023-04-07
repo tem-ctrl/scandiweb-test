@@ -1,0 +1,23 @@
+{
+    "name": "scandiweb/test",
+    "description": "\"PHP server to manage the sacndiweb assignment test website\"",
+    "type": "project",
+    "require": {
+        "nette/schema": "^1.2",
+        "vlucas/phpdotenv": "^5.5",
+        "bramus/router": "^1.6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Scandiweb\\Test\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gilbert Temgoua",
+            "email": "gilbertemgoua@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
