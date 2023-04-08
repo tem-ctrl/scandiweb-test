@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Scandiweb\Test\Models;
 use Scandiweb\Test\Controllers\Utils\ValidationSchema;
+use Scandiweb\Test\Controllers\Utils\HttpResponse;
 
 trait ProductTrait 
 {
   public function save(): void 
   {
-    $data = self::getData();
+    $data = $this->getData();
     $dbTable = $this->dbTable;
 
     $validationSchema = new ValidationSchema($dbTable);

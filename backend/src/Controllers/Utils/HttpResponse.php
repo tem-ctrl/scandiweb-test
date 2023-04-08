@@ -20,27 +20,27 @@ class HttpResponse
 
   public static function added(?string $msg = null): void
   {
-    self->set('added', $msg);
+    self::set('added', $msg);
   }
 
   public static function deleted(?string $msg = null): void
   {
-    self->set('deleted', $msg);
+    self::set('deleted', $msg);
   }
 
   public static function notAllowed(?string $msg = null): void
   {
-    self->set('not-allowed', $msg);
+    self::set('not-allowed', $msg);
   }
 
   public static function notFound(?string $msg = null): void
   {
-    self->set('not-found', $msg);
+    self::set('not-found', $msg);
   }
 
   public static function invalidData(?string $msg = null): void
   {
-    self->set('invalid-data', $msg);
+    self::set('invalid-data', $msg);
   }
 
   public static function dbError(?string $msg = null): void
