@@ -126,8 +126,7 @@ export function createFormSchema(productType) {
   let requiredString = yup.string().required(ERRORS.required).typeError(ERRORS.type)
 
   let fixedSchema = {
-    // SKU can be generated automatically with generateSKU function
-    sku: requiredString,
+    sku: requiredString, // automatically generated
     name: requiredString,
     price: requiredPositiveNumber,
     type: yup.string().oneOf(allowedProductTypes)
