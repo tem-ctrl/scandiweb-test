@@ -3,14 +3,48 @@ declare(strict_types = 1);
 namespace Scandiweb\Test\Controllers\Utils;
 use Scandiweb\Test\Controllers\Utils\Constants;
 
-class HttpResponse {
+class HttpResponse
+{
   private int $code;
   private string $message;
 
-  public static function set(string $type): string
+  private static function set(string $type, ?string $msg): void
   {
+    $head = 'Content-Type: application/json';
     [$code, $message] = Constants::HTTP_RESPONSES[$type];
-    header('Content-Type: application/json', true, $code);
-    return json_encode(['message'=> $message]);
+    header($head, true, $code);
+    $bodyMsg = $msg && $msg !== '' ? $msg : $message;
+    echo json_encode(['message'=> $bodyMsg]);
+    exit;
+  }
+
+  public static function added(?string $msg = null): void
+  {
+    self->set('added', $msg);
+  }
+
+  public static function deleted(?string $msg = null): void
+  {
+    self->set('deleted', $msg);
+  }
+
+  public static function notAllowed(?string $msg = null): void
+  {
+    self->set('not-allowed', $msg);
+  }
+
+  public static function notFound(?string $msg = null): void
+  {
+    self->set('not-found', $msg);
+  }
+
+  public static function invalidData(?string $msg = null): void
+  {
+    self->set('invalid-data', $msg);
+  }
+
+  public static function dbError(?string $msg = null): void
+  {
+    self::set('db-error', $msg);
   }
 }

@@ -15,11 +15,11 @@ class ValidationSchema
     $this->productType = strtolower($productType);
   }
 
-  public function validate($data): bool {
-    $constants = new Constants();
+  public function validate($data): bool | string
+  {
     $propertyMap = Constants::PROPERTY_MAP;
     $types = [
-    'sku' => Expect::string()->required(), //->pattern('\w{9}'),
+    'sku' => Expect::string()->required()->pattern('\w{9}'),
     'name' => Expect::string()->required(),
     'price' => Expect::number()->required()
    ];
@@ -38,7 +38,7 @@ class ValidationSchema
    }
    catch (Nette\Schema\ValidationException $e)
    {
-     return false;
+     return $e->getMessage();
    }
   }
   

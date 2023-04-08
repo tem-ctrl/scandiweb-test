@@ -17,4 +17,3 @@ $router->post('/add-product', 'Controllers@addProduct');
 $router->post('/mass-delete', 'Controllers@deleteProducts');
 $router->run();
 
-

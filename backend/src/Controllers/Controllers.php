@@ -36,8 +36,7 @@ class Controllers
     }
     catch (\Exception $e)
     {
-      echo HttpResponse::set('db-error');
-      exit;
+      HttpResponse::dbError($e->getMessage());
     }
   }
 
@@ -52,15 +51,8 @@ class Controllers
     }
     
     $class = "Scandiweb\\Test\\Models\\".ucfirst($data['type']);
-    try 
-    {
-      $product = new $class(...array_values($data));
-      echo $product->save();
-    }
-    catch (\ErrorException $e)
-    {
-      echo HttpResponse::set('invalid-data');
-    }
+    $product = new $class(...array_values($data));
+    $product->save();
   }
 
 
@@ -74,19 +66,16 @@ class Controllers
       $data = $_REQUEST;
 
       foreach(array_keys($data) as $db) {
-        $skus = implode(
-          ',', 
-          array_map(fn($item) => "'$item'", $data[$db])
-        );
+        $skus = implode(',', array_map(fn($item) => "'$item'", $data[$db]));
         $sql = "DELETE FROM $db WHERE sku IN ($skus)";
         $stmt = $dbConn->prepare($sql);
         $stmt->execute();
       }
-      echo HttpResponse::set('deleted');
+      HttpResponse::deleted();
     } 
     catch (\Exception $e) 
     {
-      echo $e->getMessage();
+      HttpResponse::dbError($e->getMessage());
     }
   }
 }
