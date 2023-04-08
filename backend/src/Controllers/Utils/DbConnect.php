@@ -2,9 +2,7 @@
 declare(strict_types=1);
 namespace Scandiweb\Test\Controllers\Utils;
 
-/**
- * Database Connection
- */
+
 class DbConnect
 {
   private const DEV = true;
@@ -35,6 +33,7 @@ class DbConnect
       $conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
       return $conn;
     } catch (\Exception $e) {
+      http_response_code(500);
       die('DB connection error! ' . $e->getMessage() . '<br/>');
     }
   }

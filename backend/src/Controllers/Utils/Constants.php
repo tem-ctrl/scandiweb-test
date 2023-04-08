@@ -1,5 +1,5 @@
 <?php 
-
+declare(strict_types=1);
 namespace Scandiweb\Test\Controllers\Utils;
 
 class Constants 
@@ -44,5 +44,7 @@ class Constants
       'Database error!'
       ]
   ];
+
+  const ALLOWED_METHODS = ['GET', 'POST', 'DELETE', 'OPTIONS'];
 }
 

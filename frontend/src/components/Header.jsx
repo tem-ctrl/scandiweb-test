@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { LinkButton, SubmitButton } from '.'
 import { deleteSelected } from '../utils/utils'
-import { API_URLS, PAGES } from "../utils/constants"
+import { PAGES } from "../utils/constants"
 import { useLocation } from 'react-router-dom'
 
 const Header = () => {
@@ -14,7 +14,7 @@ const Header = () => {
 
   const massDelete = (e) => {
     e.preventDefault()
-    deleteSelected(API_URLS.delete)
+    deleteSelected()
   }
 
   return (

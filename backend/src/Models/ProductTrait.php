@@ -3,23 +3,32 @@
 declare(strict_types=1);
 
 namespace Scandiweb\Test\Models;
+use Scandiweb\Test\Controllers\Utils\ValidationSchema;
+use Scandiweb\Test\Controllers\Utils\HttpResponse;
 
 trait ProductTrait 
 {
-    public function getSku(): string
+  public function save(): void 
   {
-    return parent::$sku;
-  }
-  public function getName(): string
-  {
-    return parent::$name;
-  }
-  public function getPrice(): float
-  {
-    return parent::$price;
-  }
-  public function getType(): string
-  {
-    return parent::$type;
+    $data = $this->getData();
+    $dbTable = $this->dbTable;
+
+    $validationSchema = new ValidationSchema($dbTable);
+    $isValid = $validationSchema->validate($data);
+
+    gettype($isValid) === 'string' && HttpResponse::invalidData($isValid);
+
+    $sqlValueString = join(', ', array_map(fn($item) => ":".$item, array_keys($data)));
+    $sql = "INSERT INTO $dbTable VALUES ($sqlValueString)";
+    $stmt = $this->dbConn->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
+    try
+    {
+      $stmt->execute($data);
+      HttpResponse::added();
+    } 
+    catch (\Exception $e)
+    {
+      HttpResponse::dbError($e->getMessage());
+    }
   }
 }

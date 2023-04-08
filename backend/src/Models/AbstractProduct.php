@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Scandiweb\Test\Models;
 
@@ -23,10 +24,6 @@ abstract class AbstractProduct
     $this->dbConn = $dbObj->connect();
   }
 
-  abstract protected function save(): string;
-  abstract protected function validateData(): bool | string;
-  abstract protected function getSku(): string;
-  abstract protected function getName(): string;
-  abstract protected function getPrice(): float;
-  abstract protected function getType(): string;
+  abstract protected function save(): void;
+  abstract protected function getData(): array;
 }

@@ -80,12 +80,11 @@ export function deleteSelected() {
   let delList = getSelected()
 
   if (delList.dvd.length > 0 || delList.book.length > 0 || delList.furniture.length > 0) {
-    // axios.delete(`${API_URLS.delete}`, {
-    //   headers: { 'Content-Type': 'multipart/form-data' },
-    //   data: { ...delList }
-    // })
-    axios.post(`${API_URLS.delete}`, { ...delList }, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+    axios.delete(`${API_URLS.delete}`, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: { ...delList }
     })
       .then((res) => {
         sessionStorage.clear()
@@ -126,8 +125,7 @@ export function createFormSchema(productType) {
   let requiredString = yup.string().required(ERRORS.required).typeError(ERRORS.type)
 
   let fixedSchema = {
-    // SKU can be generated automatically with generateSKU function
-    sku: requiredString,
+    sku: requiredString, // automatically generated
     name: requiredString,
     price: requiredPositiveNumber,
     type: yup.string().oneOf(allowedProductTypes)

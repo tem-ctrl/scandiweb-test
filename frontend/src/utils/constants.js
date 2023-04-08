@@ -44,12 +44,12 @@ export const PAGES = {
 
 export const API_URLS = {
   // Production endpoints
-  get: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/', // products 
-  post: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/add-product', //add-product',
-  delete: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/mass-delete', //mass-delete'
+  get: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/',
+  post: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/add-product',
+  delete: 'https://gtemgoua-scandiweb-test.000webhostapp.com/api/mass-delete',
 
   // Development endpoints
-  // get: 'http://localhost', // add /products after
-  // post: 'http://localhost/add-product',
-  // delete: 'http://localhost/mass-delete'
+  // get: 'http://localhost:80',
+  // post: 'http://localhost:80/add-product',
+  // delete: 'http://localhost:80/mass-delete'
 }

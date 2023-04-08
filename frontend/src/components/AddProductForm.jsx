@@ -4,15 +4,15 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-// import { useFetch } from '../utils/hooks'
-import { setDefaultFormValues, createFormSchema, sanitizeData } from '../utils/utils'
+import { useFetch } from '../utils/hooks'
+import { setDefaultFormValues, createFormSchema, sanitizeData, generateSKU } from '../utils/utils'
 import { PAGES, TOAST_OPTIONS, PROPERTY_MAP, API_URLS } from '../utils/constants'
 
 
 const AddProductForm = () => {
 
-  // const [sku, setSku] = useState('')
-  // const { data, isLoading, isFetching } = useFetch()
+  const [sku, setSku] = useState('')
+  const { data, isLoading, isFetching } = useFetch()
   const [defaultValues, setDefaultValues] = useState({})
   const [productType, setProductType] = useState('dvd')
   const [formSchema, setFormSchema] = useState(createFormSchema(productType))
@@ -28,14 +28,14 @@ const AddProductForm = () => {
   }
 
   // Generate sku upon product type change
-  // useEffect(() => {
-  //   let newSku = sku
-  //   if (!isLoading && !isFetching) {
-  //     newSku = generateSKU(data.data, productType)
-  //   }
-  //   setValue('sku', newSku)
-  //   setSku(newSku)  // eslint-disable-next-line
-  // }, [productType, data])
+  useEffect(() => {
+    let newSku = sku
+    if (!isLoading && !isFetching) {
+      newSku = generateSKU(data.data, productType)
+    }
+    setValue('sku', newSku)
+    setSku(newSku)  // eslint-disable-next-line
+  }, [productType, data])
 
   // Generate form schema on product type change
   useEffect(() => {
