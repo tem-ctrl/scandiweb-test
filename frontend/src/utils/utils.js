@@ -80,7 +80,7 @@ export function deleteSelected() {
   let delList = getSelected()
 
   if (delList.dvd.length > 0 || delList.book.length > 0 || delList.furniture.length > 0) {
-    axios.delete(`${API_URLS.delete}`, {
+    axios.delete(API_URLS.delete, {
       headers: {
         'Content-Type': 'application/json'
       },
