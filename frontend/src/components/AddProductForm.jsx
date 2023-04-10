@@ -4,20 +4,20 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-// import { useFetch } from '../utils/hooks'
-import { setDefaultFormValues, createFormSchema, sanitizeData } from '../utils/utils'
+import { useFetch } from '../utils/hooks'
+import { setDefaultFormValues, createFormSchema, sanitizeData, generateSKU } from '../utils/utils'
 import { PAGES, TOAST_OPTIONS, PROPERTY_MAP, API_URLS } from '../utils/constants'
 
 
 const AddProductForm = () => {
 
-  // const [sku, setSku] = useState('')
-  // const { data, isLoading, isFetching } = useFetch()
+  const [sku, setSku] = useState('')
+  const { data, isLoading, isFetching } = useFetch()
   const [defaultValues, setDefaultValues] = useState({})
   const [productType, setProductType] = useState('dvd')
   const [formSchema, setFormSchema] = useState(createFormSchema(productType))
-  const navigate = useNavigate()// eslint-disable-next-line
-  const { register, getValues, setValue, formState: { errors } } = useForm({
+  const navigate = useNavigate()
+  const { register, getValues, setValue } = useForm({
     defaultValues: defaultValues,
     resolver: yupResolver(formSchema)
   })
@@ -28,14 +28,14 @@ const AddProductForm = () => {
   }
 
   // Generate sku upon product type change
-  // useEffect(() => {
-  //   let newSku = sku
-  //   if (!isLoading && !isFetching) {
-  //     newSku = generateSKU(data.data, productType)
-  //   }
-  //   setValue('sku', newSku)
-  //   setSku(newSku)  // eslint-disable-next-line
-  // }, [productType, data])
+  useEffect(() => {
+    let newSku = sku
+    if (!isLoading && !isFetching) {
+      newSku = generateSKU(data.data, productType)
+    }
+    setValue('sku', newSku)
+    setSku(newSku)  // eslint-disable-next-line
+  }, [productType, data])
 
   // Generate form schema on product type change
   useEffect(() => {
@@ -71,8 +71,8 @@ const AddProductForm = () => {
       <label className='label'>
         <span className='label-text'>SKU:</span>
         <div className='label-body'>
-          <input {...register('sku')} type='text' id='sku' className='label-input' placeholder='Enter product SKU' />
-          {/* <span className='label-body-desc'>Automatically generated!</span> */}
+          <input {...register('sku')} type='text' id='sku' className='label-input' readOnly placeholder='Enter product SKU' />
+          <span className='label-body-desc'>Automatically generated!</span>
         </div>
       </label>
 
@@ -98,7 +98,7 @@ const AddProductForm = () => {
             <option value='Book' id='Book'>Book</option>
             <option value='Furniture' id='Furniture'>Furniture</option>
           </select>
-          <span className='label-body-desc'>{`Please, provide ${PROPERTY_MAP[productType.toLowerCase()].property}`}</span>
+          <span className='label-body-desc special'>{`Please, provide ${PROPERTY_MAP[productType.toLowerCase()].property}`}</span>
         </div>
       </label>
 

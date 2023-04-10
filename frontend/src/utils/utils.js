@@ -48,36 +48,10 @@ export function removeFromDeleteList(sku, type) {
 }
 
 /**
- * Retrieve the skus of selected products for deletion
- * directly from the DOM
- * @returns {Object} types as keys, lists of skus as value
- */
-function getSelected() {
-  let products = document.querySelectorAll('.product')
-  let toDelete = { 'dvd': [], 'book': [], 'furniture': [] }
-  products.forEach(product => {
-    let type = product.lastChild.lastChild.textContent
-    let sku = product.lastChild.firstChild.textContent
-    let checked = product.firstChild.firstChild.firstChild.checked
-    if (checked) {
-      if (type.startsWith('Size')) {
-        toDelete.dvd.push(sku)
-      } else if (type.startsWith('Weight')) {
-        toDelete.book.push(sku)
-      } else {
-        toDelete.furniture.push(sku)
-      }
-    }
-  })
-  return toDelete
-}
-
-/**
  * Send request to delete selected products
  */
 export function deleteSelected() {
-  // let delList = getToDeleteList()
-  let delList = getSelected()
+  let delList = getToDeleteList()
 
   if (delList.dvd.length > 0 || delList.book.length > 0 || delList.furniture.length > 0) {
     axios.delete(API_URLS.delete, {
