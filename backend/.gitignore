@@ -22,7 +22,7 @@
 /app/tmp/*
 /app/Config/core.php
 /app/Config/database.php
-/vendor
+/vendor/*
 
 # user defined
 .env

@@ -8,6 +8,5 @@ import { API_URLS } from "../utils/constants"
  */
 export function useFetch() {
   const fetchData = () => axios.get(API_URLS.get)
-  // const fetchData = () => axios.get('http://localhost:3000/data/products.json') //local data
   return useQuery('product-data', fetchData)
 }

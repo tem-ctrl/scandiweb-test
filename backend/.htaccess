@@ -1,23 +1,9 @@
-# # Allow cors
-Header set Access-Control-Allow-Origin "*"
-# Header set Content-Type "*"
-Header set Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS, HEAD, PUT, PATCH"
-Header set Access-Control-Allow-Headers "*"
-# Header Set Access-Control-Allow-Credentials: "false"
-# Header set Cross-Origin-Resource-Policy  "no-cors"
-# Header set Referrer-Policy "no-referrer"
-
 RewriteEngine On
 
-# # Redirect Trailing Slashes If Not A Folder...
-# RewriteCond %{REQUEST_FILENAME} !-d
-# RewriteCond %{REQUEST_URI} (.+)/$
-# RewriteRule ^ %1 [L,R=301]
-
-# # Deliver the folder or file directly if it exists on the server
+# Deliver the folder or file directly if it exists on the server
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
-# # Redirect every request to index.php
+# Redirect every request to index.php
 RewriteRule ^ index.php [L]
 
