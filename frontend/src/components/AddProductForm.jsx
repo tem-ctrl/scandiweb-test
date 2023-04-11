@@ -5,19 +5,18 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { useFetch } from '../utils/hooks'
-import { setDefaultFormValues, createFormSchema, sanitizeData, generateSKU } from '../utils/utils'
+import { setDefaultFormValues, createFormSchema, sanitizeData } from '../utils/utils'
 import { PAGES, TOAST_OPTIONS, PROPERTY_MAP, API_URLS } from '../utils/constants'
 
 
 const AddProductForm = () => {
-
-  const [sku, setSku] = useState('')
   const { data, isLoading, isFetching } = useFetch()
   const [defaultValues, setDefaultValues] = useState({})
+  const [skuError, setSkuError] = useState(false)
   const [productType, setProductType] = useState('dvd')
   const [formSchema, setFormSchema] = useState(createFormSchema(productType))
-  const navigate = useNavigate()
-  const { register, getValues, setValue } = useForm({
+  const navigate = useNavigate()// eslint-disable-next-line
+  const { register, getValues } = useForm({
     defaultValues: defaultValues,
     resolver: yupResolver(formSchema)
   })
@@ -26,16 +25,6 @@ const AddProductForm = () => {
     toast.error(message, TOAST_OPTIONS)
     toast.clearWaitingQueue()
   }
-
-  // Generate sku upon product type change
-  useEffect(() => {
-    let newSku = sku
-    if (!isLoading && !isFetching) {
-      newSku = generateSKU(data.data, productType)
-    }
-    setValue('sku', newSku)
-    setSku(newSku)  // eslint-disable-next-line
-  }, [productType, data])
 
   // Generate form schema on product type change
   useEffect(() => {
@@ -47,21 +36,31 @@ const AddProductForm = () => {
 
   const onSubmit = (event) => {
     event.preventDefault()
-    let submitData = sanitizeData(getValues())
-    formSchema.validate(submitData)
-      .then(() => {
-        axios.post(API_URLS.post, { ...submitData }, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+    let sku = getValues()['sku']
+    if (!isLoading && !isFetching) {
+      let skus = data.data.map(elt => elt.sku)
+      let submitData = sanitizeData(getValues())
+
+      formSchema.validate(submitData)
+        .then(() => {
+          if (skus.includes(sku)) {
+            setSkuError(true)
+          } else {
+            setSkuError(false)
+            axios.post(API_URLS.post, { ...submitData }, {
+              headers: { 'Content-Type': 'multipart/form-data' }
+            })
+              .then((res) => {
+                navigate(PAGES.homePage)
+                console.log(res.data)
+              })
+              .catch((error) => console.log(error))
+          }
         })
-          .then((res) => {
-            navigate(PAGES.homePage)
-            console.log(res.data)
-          })
-          .catch((error) => console.log(error))
-      })
-      .catch(err => {
-        notify(err.message)
-      })
+        .catch(err => {
+          notify(err.message)
+        })
+    }
   }
 
   return (
@@ -71,8 +70,8 @@ const AddProductForm = () => {
       <label className='label'>
         <span className='label-text'>SKU:</span>
         <div className='label-body'>
-          <input {...register('sku')} type='text' id='sku' className='label-input' readOnly placeholder='Enter product SKU' />
-          <span className='label-body-desc'>Automatically generated!</span>
+          <input {...register('sku')} type='text' id='sku' className='label-input' placeholder='Enter product SKU' />
+          {skuError && <span className='label-body-error'>Choose a different SKU</span>}
         </div>
       </label>
 
@@ -98,7 +97,7 @@ const AddProductForm = () => {
             <option value='Book' id='Book'>Book</option>
             <option value='Furniture' id='Furniture'>Furniture</option>
           </select>
-          <span className='label-body-desc special'>{`Please, provide ${PROPERTY_MAP[productType.toLowerCase()].property}`}</span>
+          <span className='label-body-desc special'>{`Please, provide ${PROPERTY_MAP[productType].property}`}</span>
         </div>
       </label>
 

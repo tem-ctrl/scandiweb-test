@@ -44,7 +44,5 @@ class Constants
       'Database error!'
       ]
   ];
-
-  const ALLOWED_METHODS = ['GET', 'POST', 'DELETE', 'OPTIONS'];
 }
 

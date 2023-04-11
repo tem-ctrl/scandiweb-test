@@ -1,24 +1,15 @@
 
 import { useState } from "react"
-import { addToDeleteList, removeFromDeleteList } from "../utils/utils"
 import { PROPERTY_MAP } from "../utils/constants"
 
 const ProductCard = ({ sku, name, price, type, property }) => {
   const [checked, setChecked] = useState(false)
 
-  // Add/remove product if checked/unchecked
-  const handleChange = (e) => {
-    let state = e.target.checked
-    setChecked(state)
-    state ? addToDeleteList(sku, type) : removeFromDeleteList(sku, type)
-  }
-
   // Set property to be displayed on product card: Size, Weight or Dimensions
-  const setCustomProperty = (productType, value) => {
-    let [label, unit] = PROPERTY_MAP[productType.toLowerCase()].cardLabel
+  const setCustomProp = (productType, value) => {
+    let [label, unit] = PROPERTY_MAP[productType].cardLabel
     return `${label} ${value} ${unit}`
   }
-
 
   return (
     <div className={checked ? 'product product-checked' : 'product'}>
@@ -27,7 +18,7 @@ const ProductCard = ({ sku, name, price, type, property }) => {
           <input
             type='checkbox'
             className='delete-checkbox'
-            onChange={handleChange}
+            onChange={(e) => setChecked(e.target.checked)}
           />
           <div className='slider'></div>
         </label>
@@ -36,7 +27,7 @@ const ProductCard = ({ sku, name, price, type, property }) => {
         <p className="product-desc-sku">{sku}</p>
         <p className="product-desc-name">{name}</p>
         <p className="product-desc-price">{price} $</p>
-        <p className="product-desc-other">{setCustomProperty(type, property)}</p>
+        <p className="product-desc-other">{setCustomProp(type, property)}</p>
       </div>
     </div>
   )

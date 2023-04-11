@@ -9,23 +9,8 @@ use Scandiweb\Test\Controllers\Utils\HttpResponse;
 
 class Controllers 
 {
-  private static function isValidMethod(string $method): void
-  {
-    if (
-      isset($_SERVER['REQUEST_METHOD']) &&
-      in_array($_SERVER['REQUEST_METHOD'], Constants::ALLOWED_METHODS)
-      ) 
-    {
-      $actualMethod = $_SERVER['REQUEST_METHOD'];
-      $responseMsg = $actualMethod . ' not allowed on this route!!!';
-      strtolower($method) !== strtolower($actualMethod) &&
-      HttpResponse::notAllowed($responseMsg);
-    }
-  }
-
   public static function getProducts(): void
   {
-    self::isValidMethod('GET');
     try 
     {
       $dbObj = new DbConnect;
@@ -58,8 +43,6 @@ class Controllers
 
   public static function addProduct(): void
   {
-    self::isValidMethod('POST');
-    
     $data = $_POST;
     $p = ['price', 'size', 'weight', 'height', 'width', 'length'];
     $keys = array_keys($data);
@@ -74,29 +57,20 @@ class Controllers
 
 
   public static function deleteProducts(): void
-  { 
-    self::isValidMethod('DELETE');
-
-    $data = (array) json_decode(file_get_contents("php://input"));
-    $sqls = [];
-
-    foreach(array_keys($data) as $db) {
-      if (count($data[$db]) > 0) {
-        $skus = implode(',', array_map(fn($item) => "'$item'", $data[$db]));
-        $sql = "DELETE FROM $db WHERE sku IN ($skus)";
-        array_push($sqls, $sql);
-      }
-    }
+  {    
     try 
     {
       $dbObj = new DbConnect;
       $dbConn = $dbObj->connect();
+      
+      $data = $_REQUEST;
 
-      foreach($sqls as $sql){
+      foreach(array_keys($data) as $db) {
+        $skus = implode(',', array_map(fn($item) => "'$item'", $data[$db]));
+        $sql = "DELETE FROM $db WHERE sku IN ($skus)";
         $stmt = $dbConn->prepare($sql);
         $stmt->execute();
       }
-
       HttpResponse::deleted();
     } 
     catch (\Exception $e) 

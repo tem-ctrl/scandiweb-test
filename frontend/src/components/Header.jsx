@@ -25,7 +25,7 @@ const Header = () => {
           ? (
             <>
               <LinkButton text='ADD' path={PAGES.addProductPage} />
-              <SubmitButton id="delete-product-btn" text='MASS DELETE' handleclick={massDelete} />
+              <SubmitButton id="delete-product-btn" text='MASS DELETE' form="" handleclick={massDelete} />
             </>
           ) : (
             <>

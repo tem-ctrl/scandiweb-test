@@ -4,61 +4,37 @@ import { API_URLS, PROPERTY_MAP, ERRORS, FIXED_ATTRIBUTES } from './constants'
 
 /**
  * Retrieve the skus of selected products for deletion
+ * directly from the DOM
  * @returns {Object} types as keys, lists of skus as value
  */
-function getToDeleteList() {
-  let list = sessionStorage.getItem('toDeleteList')
-  return list ? JSON.parse(list) : { 'dvd': [], 'book': [], 'furniture': [] }
-}
-
-/**
- * Save list of products to delete
- * @param {Object} list 
- */
-function saveToDeleteList(list) {
-  let jsonList = JSON.stringify(list)
-  sessionStorage.setItem('toDeleteList', jsonList)
-}
-
-/**
- * Add selected product to deletion list
- * @param {String} sku Product SKU
- * @param {String} type Product type
- */
-export function addToDeleteList(sku, type) {
-  let key = type.toLowerCase()
-  let toDeleteObject = getToDeleteList()
-  !toDeleteObject[key].includes(sku) && toDeleteObject[key].push(sku)
-  saveToDeleteList(toDeleteObject)
-}
-
-/**
- * remove unselected product from deletion list
- * @param {String} sku Product SKU
- * @param {String} type Product type
- */
-export function removeFromDeleteList(sku, type) {
-  let key = type.toLowerCase()
-  let toDeleteObject = getToDeleteList()
-  let newArray = toDeleteObject[key].includes(sku)
-    ? toDeleteObject[key].filter((item) => item !== sku)
-    : toDeleteObject[key]
-  toDeleteObject[key] = newArray
-  saveToDeleteList(toDeleteObject)
+function getSelected() {
+  let products = document.querySelectorAll('.product')
+  let toDelete = { 'dvd': [], 'book': [], 'furniture': [] }
+  products.forEach(product => {
+    let type = product.lastChild.lastChild.textContent
+    let sku = product.lastChild.firstChild.textContent
+    let checked = product.firstChild.firstChild.firstChild.checked
+    if (checked) {
+      if (type.startsWith('Size')) {
+        toDelete.dvd.push(sku)
+      } else if (type.startsWith('Weight')) {
+        toDelete.book.push(sku)
+      } else {
+        toDelete.furniture.push(sku)
+      }
+    }
+  })
+  return toDelete
 }
 
 /**
  * Send request to delete selected products
  */
 export function deleteSelected() {
-  let delList = getToDeleteList()
-
+  let delList = getSelected()
   if (delList.dvd.length > 0 || delList.book.length > 0 || delList.furniture.length > 0) {
-    axios.delete(API_URLS.delete, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: { ...delList }
+    axios.post(API_URLS.delete, { ...delList }, {
+      headers: { 'Content-Type': 'multipart/form-data' }
     })
       .then((res) => {
         sessionStorage.clear()

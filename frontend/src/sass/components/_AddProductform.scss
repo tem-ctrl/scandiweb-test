@@ -28,10 +28,13 @@
   &-body {
     @include flex($jc: space-between, $ga: 5px, $di: column);
     @include rectangle($w: 70%, $h: fit-content);
-    &-desc {
+    &-desc, &-error {
       align-self: flex-start;
       color: #575454;
       font-size: 15px;
+    }
+    &-error {
+      color: red;
     }
   }
 
@@ -87,15 +90,8 @@
   margin-bottom: 0;
 }
 
-#sku:focus,
-#sku:hover {
-  outline: none;
-  border-color: $color-primary;
-  box-shadow: none;
-}
-
 .special {
   position: relative;
-  top: 14px;
-  color:#1a1919;
+  top: 12px;
+  color: #1a1919;
 }
