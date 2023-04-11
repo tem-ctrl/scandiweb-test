@@ -16,7 +16,10 @@ trait ProductTrait
     $validationSchema = new ValidationSchema($dbTable);
     $isValid = $validationSchema->validate($data);
 
-    gettype($isValid) === 'string' && HttpResponse::invalidData($isValid);
+    if (gettype($isValid) === 'string')
+    {
+      HttpResponse::invalidData($isValid);
+    }
 
     $sqlValueString = join(', ', array_map(fn($item) => ":".$item, array_keys($data)));
     $sql = "INSERT INTO $dbTable VALUES ($sqlValueString)";

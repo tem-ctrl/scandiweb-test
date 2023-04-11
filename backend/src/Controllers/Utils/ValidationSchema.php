@@ -19,7 +19,7 @@ class ValidationSchema
   {
     $propertyMap = Constants::PROPERTY_MAP;
     $types = [
-    'sku' => Expect::string()->required()->pattern('\w{9}'),
+    'sku' => Expect::string()->required(),
     'name' => Expect::string()->required(),
     'price' => Expect::number()->required()
    ];
